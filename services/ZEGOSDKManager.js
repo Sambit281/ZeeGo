@@ -1,9 +1,9 @@
 import { ZegoExpressEngine } from 'zego-express-engine-reactnative';
-import { ZIM } from 'zego-zim-react-native';
+import {ZIM} from 'zego-zim-react-native';
 
 class ZEGOSDKManager {
   static instance;
-  
+
   static getInstance() {
     if (!ZEGOSDKManager.instance) {
       ZEGOSDKManager.instance = new ZEGOSDKManager();
@@ -18,33 +18,32 @@ class ZEGOSDKManager {
 
   async initSDK(appID, appSign, scenario) {
     try {
-      // Create Express Engine using the static method
-      this.zegoEngine = await ZegoExpressEngine.createEngine(
+      console.log('Initializing ZegoExpressEngine...');
+      this.zegoEngine = await ZegoExpressEngine?.createEngine(
         appID,
         appSign,
-        {
-          scenario: scenario || 0, // Default scenario if none provided
-          enablePlatformView: true
-        }
+        true, // isTestEnv
+        scenario || 0
       );
-      
-      // Initialize ZIM
-      this.zim = ZIM.create({ appID });
-      
+      console.log('ZegoExpressEngine initialized successfully');
+
+      console.log('Initializing ZIM...');
+      this.zim = ZIM?.create({ appID, appSign });
       if (!this.zim) {
         throw new Error('Failed to create ZIM instance');
       }
-      
-      // Login to ZIM with a random userID
+      console.log('ZIM initialized successfully');
+
       const userID = Math.floor(Math.random() * 1000000).toString();
       await this.zim.login({
         userID,
         userName: `User_${userID}`,
       });
+      console.log('Logged in to ZIM successfully');
 
-      // Set up basic configurations
       await this.zegoEngine.enableAudioCaptureDevice(true);
-      
+      console.log('Audio capture device enabled');
+
       return true;
     } catch (error) {
       console.error('Failed to initialize SDK:', error);

@@ -42,7 +42,7 @@ export default function App() {
 
     return () => {
       // Cleanup SDK when app is closed
-      ZEGOSDKManager.getInstance().uninitSDK();
+      ZEGOSDKManager?.getInstance()?.destroySDK();
     };
   }, []);
   return (
